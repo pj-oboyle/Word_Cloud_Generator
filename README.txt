@@ -1,99 +1,112 @@
-###########################################################
-##                                                       ##
-##             Word Cloud Generator V1.0                 ##
-##                                                       ##
-##        H.Dip in Science (Software Development)        ##
-##    GMIT - Dept. Computer Science & Applied Physics    ##
-##                Student #: G00398242                   ##
-##                                                       ##
-###########################################################
-					
-		Table of Contents:
-		1. Description
-		2. How to Run Program
-		3. Features
-		
-*************    Description    *************
+# Word Cloud Generator V1.0
 
-This is a command line menu-driven Java application that counts the word frequecny of input text and returns a word cloud image of the most common words.
+This is a command-line menu-driven Java application that analyzes input text, calculates the word frequency, and generates a word cloud image of the most common words. It utilizes modular interfaces and multithreading to ensure flexibility and performance.
 
-The workflow for creating a word cloud is broken into five modules. Each module's behaviour is placed in an interface which is then used by a Generator interface to build the word cloud step by step.
+---
 
-The five modules with their interfaces are:
-	1. Sourceable: 	Load the input text.
-	2. Parseable: 	Prepare the input text for mapping the word frequency (e.g.isolate words, remove symbols/abbreviations/ignore words)
-	3. Mappable: 	Map the frequency of each word contained within the normalised text and save their value.
-	4. Rankable: 	Rank the words based on decreasing occurrence.
-	5. Drawable: 	Draw/output a word cloud image of the most common words to an image file.
+## Features
 
-Other specialised classes include a Runner class along with:
-	1. The Menu class creates the user interface that controls the command line menu. This class takes input from the user and stores these options (i.e. number of output words, multi-threading settings and input text source) in the Settings object.
-	2. The slowest step of creating the word cloud is mapping the frequency of all the words. This step can be expedited through dividing the input text and performing each part concurrently using threads. A specialised class called ThreadedMapByHash inherits behaviour from the MapByHash class and creates a Runnable task for concurrent execution of a portion of the input.
-	3. The application can accept as an input source as a url or a file (.html or .txt). There is a class for processing each of these input types; SourceURL and SourceTxt respectively.
+### **1. Core Functionalities**
+- **Word Cloud Workflow:** The application uses five modular interfaces to create a word cloud step-by-step:
+  1. **`Sourceable`**: Loads the input text (from a file, URL, etc.).
+  2. **`Parseable`**: Prepares the text by isolating words, removing symbols/abbreviations, and ignoring specified words.
+  3. **`Mappable`**: Maps the frequency of each word.
+  4. **`Rankable`**: Ranks words based on decreasing frequency.
+  5. **`Drawable`**: Outputs the word cloud image as an image file.
 
-There are two ENUM classes that store constant data for fonts and font colours.
+- **Input Source Flexibility:**
+  - Accepts input from `.html` files, `.txt` files, and URLs (must include `http`/`https` protocol).
+  - Automatically appends missing file extensions to input filenames when required.
 
+- **Multi-Threading Options:**
+  - **Unthreaded Mode:** Processes word frequency mapping in a single thread.
+  - **Set Thread Number:** Allows the user to specify the number of threads for processing.
+  - **Optimized Mode:** Automatically determines the optimal number of threads based on the number of available processors.
 
-*************   How to Run Program   *************
+- **Error Handling:**
+  - Custom error messages for invalid inputs (e.g., out-of-range integers, invalid file names, empty entries).
+  - Verifies the existence of input sources before processing.
 
-To run the program:
-	1. Select option 1 (Run program).
-	2. (If not already set by user) User will be prompted to input the number of most common words to display in the word cloud image.
-	3. User will then be prompted to type the name of the input source.
-	4. If the source is found, source and current attributes are displayed with a prompt to execute the program.
-	5. After execution, output messages are displayed and the program closes.
-	
-*************      Features       *************
+- **Output Features:**
+  - Automatically names output images by concatenating input file name, filter name, and edge mode used.
+  - Ensures output images match the file type of the input source.
 
-Multi-Threading :-
-There are three modes in the Threading Options (main menu option 2):
-	1. Unthreaded mode - Do not use any multithreading for the word frequency mapping.	
-	2. Set Thread Number - The user can set the number of threads to utilse.
-	3. Optimised Mode - The program will based the number of the number of processors that the user's device has available.
- 
-Application menu keeps running until a word cloud is created (main menu option 1) or the user selects to quit the program (main menu option 5).
-User can navigate between all the option sub menus and the main menu using the "Return to main menu option" in each sub-menu.
+### **2. User Interface**
+- **Command-Line Menu:**
+  - Main menu options for running the program, setting threading preferences, selecting input sources, and quitting.
+  - Sub-menus allow navigation between input source options, threading settings, and main menu.
+  - Program runs until a word cloud is generated or the user chooses to quit.
 
-File Extension Options :-
-	Application can switch between different input source types. Three input text sources to select from:
-		1. .html
-		2. .txt
-		3. url (address must contain protocol identifer http or https to be valid)
-	Input file names can be entered with or without the file extension (i.e. .html/.txt) when the corresponding mode is selected in sub-menu 3 "Input Source Options". 
+### **3. Specialized Classes**
+- **`Menu` Class:**
+  - Provides the interactive command-line interface for user input and settings management.
 
-Input/Output Features :-	
-	1. User input checks, 
-		There are two methods for integer and string inputs. 
-		When prompted for menu input (integers only menu options), application can detect illegal inputs from out of range integers, strings and empty return entries (custom error message for each).
-				
-	2. Input image file check
-		Program checks that input source exists before execution and prompts user to enter a valid file name if the check fails.
-		Program can check if a user has entered a file name without the file extension (i.e. html/txt) and automatically add the currently selected file type if omitted before searching for the file.
-		Program can accept input from image file names and folders/directories that have the file extension as part of the their name (e.g. ./.html/testFile.html.ntml).
-		
-	3. Output file naming
-		The name of the output image name is auto-generated from concatenating the input file name, filter name and edge mode used.
-		The output image will automatically be of the same file type as the input file.
-		
-		
-*************      References       *************
-R. W. K. Sedgewick, 2001. Algorithms, 4th ed., Boston, Addison-Wesley.
+- **`ThreadedMapByHash` Class:**
+  - Extends the `MapByHash` class for concurrent execution of word frequency mapping using `Runnable` tasks.
 
-Runtime complexity of Map.merge:
-https://docs.oracle.com/javase/8/docs/api/java/util/Map.html#merge-K-V-java.util.function.BiFunction-
+- **Input Source Processors:**
+  - **`SourceURL`**: Processes text input from a URL.
+  - **`SourceTxt`**: Processes text input from a `.txt` file.
 
-Runtime complexity of Collections.sort:
-https://docs.oracle.com/javase/6/docs/api/java/util/Collections.html#sort(java.util.List)
+- **ENUMs for Constants:**
+  - Stores predefined font types and colors for word cloud generation.
 
-Set the timing to forever with ExecutorService.awaitTermination :
-https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/package-summary.html
+---
 
-JSoup Documentation -----
-parse method:
-https://jsoup.org/apidocs/org/jsoup/parser/Parser.html#parse(java.lang.String,java.lang.String)
+## Installation
 
-connect method:
-https://jsoup.org/apidocs/org/jsoup/Jsoup.html#connect(java.lang.String)
+### **Prerequisites**
+- **Java Development Kit (JDK):** Version 8 or above.
+- **Integrated Development Environment (IDE):** Eclipse, IntelliJ IDEA, or a text editor with Java support.
 
+### **Steps**
+1. Clone the repository or download the source code.
+   ```bash
+   git clone https://github.com/your-username/word-cloud-generator.git
+   ```
+2. Open the project in your preferred IDE.
+3. Compile the Java files:
+   ```bash
+   javac *.java
+   ```
+4. Run the program by executing the `Runner` class.
 
-Some of my own work is reused from a previous project that was submitted for Object Oriented Software Development (COMP08026) in 2021.
+---
+
+## Usage
+
+### **Running the Program**
+1. Select **Option 1: Run Program** from the main menu.
+2. Set the number of most common words to display in the word cloud (if not already set).
+3. Specify the input text source (file name, URL, etc.).
+4. Verify the source details and execute the program.
+5. View output messages and check the generated word cloud image.
+
+### **Threading Options**
+Access threading settings via **Main Menu > Option 2:**
+1. **Unthreaded Mode:** No multithreading used.
+2. **Set Thread Number:** Specify the number of threads to utilize.
+3. **Optimized Mode:** Automatically optimizes threading based on system processors.
+
+### **Input Source Options**
+Navigate to **Main Menu > Option 3** to switch between:
+1. `.html` files.
+2. `.txt` files.
+3. URLs (must include `http`/`https`).
+
+---
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+For further information, contact:
+- **Name:** pj-oboyle
+- **GitHub:** [pj-oboyle](https://github.com/pj-oboyle)
+
+---
+
+Thank you for using the Word Cloud Generator! If you find this project helpful, please give it a star on GitHub.
+
