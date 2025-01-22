@@ -1,4 +1,4 @@
-# Word Cloud Generator V1.0
+# Word Cloud Generator
 
 This is a command-line menu-driven Java application that analyzes input text, calculates the word frequency, and generates a word cloud image of the most common words. It utilizes modular interfaces and multithreading to ensure flexibility and performance.
 
@@ -97,7 +97,7 @@ Navigate to **Main Menu > Option 3** to switch between:
 ---
 
 ## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
 
 ---
 
